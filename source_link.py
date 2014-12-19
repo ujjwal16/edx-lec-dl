@@ -1,7 +1,7 @@
 import urllib2
 import extract
 from bs4 import BeautifulSoup
-def source(link):
+def source(link,seed):
 	#link=link.strip('\'"')
 	print "=************************************************entered source******************************************** \n"
 	list_url=[]
@@ -33,11 +33,13 @@ def source(link):
 			x=link.get('href')
 			if x is not None:
 				print "========================================================="+x
-				x=x.encode('ascii')
-				if x and x.find("htt") !=-1:
-					if x[0]!='#':
-						list_url.append(x)
-
+				#x=x.encode('ascii')
+				if x :
+					if x.find("htt")==-1:
+						x=seed+x[x.find("/"):]
+					#if x[0]!='#':
+					list_url.append(x)
+		print list_url
 		return list_url
  # 	while True:
 	#  	link,position=extract.extract(content,position)
