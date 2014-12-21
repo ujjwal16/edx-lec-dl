@@ -56,5 +56,41 @@ else:
 #==========================================================#redirecting to dasboard
 req = urllib2.Request(dashboard)
 resp = urllib2.urlopen(req)
-print resp.getcode()
-print resp.read().find("ujjwal16")
+ans=[]
+print "status_code==>%d" %resp.getcode()
+#print resp.read().find("ujjwal16")
+content=BeautifulSoup(resp)
+empty=[]
+a_list=content.find_all('a')
+
+for link in a_list:
+	x=link.get('href')
+	empty.append(x)
+for s in empty:
+	if keyterm in s:
+		if "info" in s:
+			ans.append(s)
+			break
+
+main=str(ans[0])
+main=home+main
+print main
+#=======================================================#opening courseware
+c_list=[]
+ans=[]
+course = urllib2.Request(main)
+course_resp = urllib2.urlopen(course)
+#print course_resp.getcode()
+course_material=BeautifulSoup(course_resp)
+a_list=course_material.find_all('a')
+for link in a_list:
+	x=link.get('href')
+	c_list.append(x)
+
+print  "================="
+for s in c_list:
+	if "/courseware" in s:
+		ans.append(s)
+access=str(ans[0])
+access=home+access
+print access
