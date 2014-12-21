@@ -7,7 +7,7 @@ home= 'https://www.edx.org'
 login_page = 'https://courses.edx.org/login'
 dashboard = 'https://www.edx.org/dashboard'
 login_app=login_page + "_ajax"
-script ,user_email,user_pswd=argv
+script ,user_email,user_pswd,keyterm=argv
 #===========================================================
 print user_email
 print user_pswd
