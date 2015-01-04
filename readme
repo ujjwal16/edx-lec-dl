@@ -1,1 +1,5 @@
 Python script to Download video lectures from signed up courses on edx
+Python Packages need to be downloaded :
+  BeautifulSoup
+  Pafy
+Above mentioned Packages can be downloaded very easily using PIP. 
