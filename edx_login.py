@@ -8,14 +8,20 @@ login_page = 'https://courses.edx.org/login'
 dashboard = 'https://www.edx.org/dashboard'
 login_app=login_page + "_ajax"
 #script ,user_email,user_pswd,keyterm=argv
-user_email=raw_input("Enter your email-id ")
-user_pswd=raw_input("Enter your password ")
-keyterm=raw_input("Enter course key term ")
+while True:
+	user_email=raw_input("Enter your email-id ")
+	user_pswd=raw_input("Enter your password ")
+	keyterm=raw_input("Enter course key term ")
 
-#===========================================================
-print user_email
-print user_pswd
-print login_app
+	#===========================================================
+	print "user-id entered: " + user_email
+	print "user password: " +user_pswd
+	print "course keyterm: "+keyterm +"\n"
+	xyz=raw_input("Press Enter to confirm or 'r' to re-enter")
+	if xyz=="r":
+		continue
+	else:
+		break
 #===========================================================#for getting response header and cookie information
 
 c = cookielib.CookieJar()
@@ -35,36 +41,36 @@ headers = {'User-Agent': 'edX-downloader/0.01',
 'X-Requested-With': 'XMLHttpRequest',
 'X-CSRFToken': set_cookie.get('csrftoken', '') }
 csrf=headers['X-CSRFToken']
-print "csrf token" +csrf
+#print "csrf token" +csrf
 #===========================================================# creating login data
 post_data = urllib.urlencode({
 'email' : user_email,
 'password' : user_pswd,
 'remember':False
 }).encode('utf-8')
-print post_data
+#print post_data
 #===========================================================#sending request to login_app ,Method=POST
 
 request = urllib2.Request(login_app, post_data,headers)
 response = urllib2.urlopen(request)
-print "repsonse code=%d" %response.getcode()
+print "repsonse code=%d\n" %response.getcode()
 data=response.read().decode('utf-8')
 resp=json.loads(data)
 #===========================================================# to check the login 
 
-print data
+#print data
 
 if not resp.get('success',False):
-	print "error"
+	print "Please check your credentials or your connection"
 else:
-	print "success"
+	print "Login successful"
 
 #==========================================================#redirecting to dasboard
 
 req = urllib2.Request(dashboard)
 resp = urllib2.urlopen(req)
 ans=[]
-print "status_code==>%d" %resp.getcode()
+#print "status_code==>%d" %resp.getcode()
 #print resp.read().find("ujjwal16")
 content=BeautifulSoup(resp)
 empty=[]
@@ -81,11 +87,13 @@ if not ans:
 	print "Sorry no matches found -restart application"
 else:
 	ans=list(set(ans))
-	print "\n".join(ans)
-	index=int(raw_input("Input course link index to select course(index start from 1)"))
+	print "\nSearched Course : \n"
+	print "\n".join(home+p for p in ans)
+	index=int(raw_input("Input course link index to select course(index start from 1) "))
 	main=str(ans[index-1])
 	main=home+main
-	print main
+	print "\nSelected course :\n"
+	print main+"\n"
 
 	#=======================================================#opening courseware
 
@@ -100,21 +108,22 @@ else:
 		x=link.get('href')
 		c_list.append(x)
 
-	print  "========================================"
+	
 	for s in c_list:
 		if "/courseware" in s:
 			ans.append(s)
 	access=str(ans[0])
 	access=home+access
-	print access
-	print  "========================================"
+	print "courseware link:"
+	print access +"\n"
+	
 	#==========================================================#extracting vedio id
 	print "Starting video-id extraction"
 	courseware=urllib2.Request(access)
 	courseware_resp=urllib2.urlopen(courseware)
-	print courseware_resp.getcode()
+	#print courseware_resp.getcode()
 	content=BeautifulSoup(courseware_resp)
-	print "You are on page %s" %content.title.stirng
+	#print "You are on page %s" %content.title.stirng
 	material=content.find("nav",{"aria-label":"Course Navigation"})
 	week=material.find_all('div')
 	link={}
@@ -123,23 +132,32 @@ else:
 		key=str(mat.h3.a.string)
 		key=key.lstrip()
 		key=key.rstrip()
-		print "Week Name= %s" %key
+		#print "Week Name= %s" %key
 		week_name.append(key)
 		subchap=mat.ul.find_all('a')
 		url=[home+a['href'] for a in subchap]
 		link[key]=url
-	print link
+	#print link
 	print "\n".join(week_name)
+	week_no=[]
 	vid_list=[]
-	vid_list=vid_list+vid_id(link[week_name[2]])
-	#======================================================================#under work
-	#for name in week_name:
-	#	print "Extraction for %s begins" %name
-	#	vid_list=vid_list+vid(link[name])	
-	#	print "Extraction for %s complete" %name
+	week=raw_input("Key in week/chapter indexes to download(index start from 1) or to download all type in ALL " )
+	if week.lower()!="all":
+		week_no=re.sub("[^\w]"," ",week).split()
+		print "\n".join(week_no)
+		for name in week_no:
+			print "Extraction for %s begins" %week_name[int(name)-1]
+			vid_list=vid_list+vid_id(link[week_name[int(name)-1]])	
+			print "Extraction for %s completed \n" %week_name[int(name)-1]
+	
+	else:
+		for name in week_name:
+			print "Extraction for %s begins" %name
+			vid_list=vid_list+vid_id(link[name])	
+			print "Extraction for %s completed +\n " %name
 	#=====================================================================
-	print "\n".join(vid_list)
-	xyz=raw_input("Press any key to begin downloading or enter No to exit")
+	#print "\n".join(vid_list)
+	xyz=raw_input("Press any key to begin downloading or enter No to exit ")
 	if xyz.lower()!="no":
 		print "\n","video will now get downloaded from vid_list"
 		download_video(vid_list)
