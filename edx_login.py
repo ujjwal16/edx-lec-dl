@@ -157,8 +157,8 @@ else:
 			print "Extraction for %s completed +\n " %name
 	#=====================================================================
 	#print "\n".join(vid_list)
-	xyz=raw_input("Press any key to begin downloading or enter No to exit ")
-	if xyz.lower()!="no":
+	xyz=raw_input("Press any key to begin downloading or enter N to exit ")
+	if xyz.lower()!="n":
 		print "\n","video will now get downloaded from vid_list"
 		download_video(vid_list)
 		print "Thanks for choosing edx-lec-dl"
