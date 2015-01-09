@@ -1,5 +1,6 @@
-Python script to Download video lectures from signed up courses on edx
+edx-lec-dl is Python script to Download video lectures(edx) from signed up courses on edx
 Python Packages need to be downloaded :
   BeautifulSoup
   Pafy
 Above mentioned Packages can be downloaded very easily using PIP. 
+For further information please read wiki-https://github.com/ujjwal16/edx-lec-dl/wiki
