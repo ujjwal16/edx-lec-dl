@@ -117,7 +117,7 @@ else:
 	print "courseware link:"
 	print access +"\n"
 	
-	#==========================================================#extracting vedio id
+	#==========================================================#extracting video id
 	print "Starting video-id extraction"
 	courseware=urllib2.Request(access)
 	courseware_resp=urllib2.urlopen(courseware)
