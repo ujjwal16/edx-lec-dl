@@ -2,8 +2,10 @@ import urllib,urllib2, cookielib,json,re
 from bs4 import BeautifulSoup
 from utility import download_video
 from utility import vid_id
+import time
 #==========================================================# website information
 home= 'https://www.edx.org'
+course_link='https://courses.edx.org'
 login_page = 'https://courses.edx.org/login'
 dashboard = 'https://www.edx.org/dashboard'
 login_app=login_page + "_ajax"
@@ -79,10 +81,16 @@ a_list=content.find_all('a')
 for link in a_list:
 	x=link.get('href')
 	empty.append(x)
-for s in empty:
-	if (keyterm.lower() in s.lower()) and (("/info" or "/info/") in s.lower()):
-		ans.append(s)
 
+for s in empty:
+	print s
+	#time.sleep(2) 
+	try:
+			if s:
+					if (keyterm.lower() in s.lower()) and (("/info" or "/info/") in s.lower()):
+							ans.append(s)
+	except KeyError:
+			pass
 if not ans:
 	print "Sorry no matches found -restart application"
 else:
@@ -91,7 +99,7 @@ else:
 	print "\n".join(home+p for p in ans)
 	index=int(raw_input("Input course link index to select course(index start from 1) "))
 	main=str(ans[index-1])
-	main=home+main
+	main=course_link+main
 	print "\nSelected course :\n"
 	print main+"\n"
 
@@ -113,7 +121,7 @@ else:
 		if "/courseware" in s:
 			ans.append(s)
 	access=str(ans[0])
-	access=home+access
+	access=course_link+access
 	print "courseware link:"
 	print access +"\n"
 	
@@ -135,7 +143,7 @@ else:
 		#print "Week Name= %s" %key
 		week_name.append(key)
 		subchap=mat.ul.find_all('a')
-		url=[home+a['href'] for a in subchap]
+		url=[course_link+a['href'] for a in subchap]
 		link[key]=url
 	#print link
 	print "\n".join(week_name)
